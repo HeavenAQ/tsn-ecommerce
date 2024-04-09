@@ -1,0 +1,48 @@
+---
+import { Image } from 'astro:assets'
+import LogoImg from '../assets/logo.webp'
+import SideBarItem from './react/SideBarItem.tsx'
+import {
+  HiOutlineHome,
+  HiOutlineCalendarDays,
+  HiOutlineHomeModern,
+  HiOutlineUsers,
+  HiOutlineCog6Tooth
+} from 'react-icons/hi2'
+---
+
+<div class="row-span-2 py-8 px-6 items-center w-full h-full">
+  <Image
+    src={LogoImg}
+    alt="Logo"
+    class=""
+    width="150"
+    height="150"
+    class="mx-auto"
+  />
+  <li>
+    <SideBarItem href="/dashboard" title="Dashboard">
+      <HiOutlineHome />
+    </SideBarItem>
+  </li>
+  <li>
+    <SideBarItem href="/bookings" title="Bookings">
+      <HiOutlineCalendarDays />
+    </SideBarItem>
+  </li>
+  <li>
+    <SideBarItem href="/cabins" title="Cabins">
+      <HiOutlineHomeModern />
+    </SideBarItem>
+  </li>
+  <li>
+    <SideBarItem href="/users" title="Users">
+      <HiOutlineUsers />
+    </SideBarItem>
+  </li>
+  <li>
+    <SideBarItem href="/settings" title="Settings">
+      <HiOutlineCog6Tooth />
+    </SideBarItem>
+  </li>
+</div>
