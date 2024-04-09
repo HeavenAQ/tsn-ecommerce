@@ -1,0 +1,47 @@
+---
+import Header from '../components/react/Header.tsx'
+import SideBar from '../components/react/SideBar.tsx'
+---
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>TSN - Dashboard</title>
+  </head>
+  <body class="grid grid-cols-[20rem_1fr] h-[100vh] grid-rows-[auto_1fr]">
+    <SideBar />
+    <Header />
+    <main class="bg-green-300 px-10 py-14">
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+  @layer base {
+    h1 {
+      @apply text-4xl font-bold;
+    }
+
+    h2 {
+      @apply text-3xl font-semibold;
+    }
+
+    h3 {
+      @apply text-2xl font-medium;
+    }
+
+    h4 {
+      @apply text-xl font-normal;
+    }
+  }
+</style>
