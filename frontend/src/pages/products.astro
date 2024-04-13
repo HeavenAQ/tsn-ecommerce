@@ -1,0 +1,12 @@
+---
+import AdminLayout from '../layouts/AdminLayout.astro'
+import ProductTable from '../components/react/ProductTable.tsx'
+---
+
+<AdminLayout>
+  <div class="inline-flex justify-start items-center w-full mb-5">
+    <h1 class="mr-auto">Products</h1>
+    <p>filter / sort</p>
+  </div>
+  <ProductTable />
+</AdminLayout>

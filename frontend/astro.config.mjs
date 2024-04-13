@@ -9,8 +9,6 @@ export default defineConfig({
     react({
       include: ["**/react/*"],
     }),
-    tailwind({
-      applyBaseStyles: false,
-    }),
+    tailwind(),
   ],
 });
