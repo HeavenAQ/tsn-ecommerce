@@ -28,6 +28,10 @@ CREATE TABLE "languages" (
     "updated_at" timestamptz NOT NULL DEFAULT now()
 );
 
+INSERT INTO languages (code)
+    VALUES ('chn'),
+    ('jp');
+
 -- Products table
 CREATE TABLE "products" (
     "pk" bigserial PRIMARY KEY,
@@ -41,13 +45,13 @@ CREATE TABLE "products" (
     "updated_at" timestamptz NOT NULL DEFAULT now()
 );
 
--- Product Translations table
 CREATE TABLE "product_translations" (
     "pk" bigserial PRIMARY KEY,
     "product_pk" bigint NOT NULL REFERENCES products (pk) ON DELETE CASCADE,
     "language_pk" bigint NOT NULL REFERENCES languages (pk) ON DELETE CASCADE,
     "name" text NOT NULL DEFAULT '',
     "description" text NOT NULL DEFAULT '',
+    "category" text NOT NULL DEFAULT '',
     "created_at" timestamptz NOT NULL DEFAULT now(),
     "updated_at" timestamptz NOT NULL DEFAULT now()
 );
@@ -76,7 +80,7 @@ CREATE TABLE "orders" (
     "status" order_status NOT NULL DEFAULT 'pending',
     "is_paid" boolean NOT NULL DEFAULT FALSE,
     "total_price" int NOT NULL DEFAULT 0,
-    "shipping_address" text NOT NULL DEFAULT '',
+    "shipping_address" text NOT NULL,
     "shipping_date" timestamptz,
     "delivered_date" timestamptz,
     "created_at" timestamptz NOT NULL DEFAULT now(),
