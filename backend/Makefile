@@ -1,7 +1,5 @@
-ifneq (,$(wildcard ./.env))
-	include .env
-	export
-endif
+include .env
+export
 
 migrate_up: 
 	@echo "Migrating up..."

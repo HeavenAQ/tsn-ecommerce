@@ -7,13 +7,11 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (email, phone, PASSWORD, first_name, last_name, language_pk, address, last_login)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+INSERT INTO users (email, phone, PASSWORD, first_name, last_name, language_pk, address)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING
     pk, id, email, phone, password, first_name, last_name, language_pk, address, last_login, created_at, updated_at
 `
@@ -26,7 +24,6 @@ type CreateUserParams struct {
 	LastName   string
 	LanguagePk int64
 	Address    string
-	LastLogin  pgtype.Timestamptz
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
@@ -38,7 +35,6 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		arg.LastName,
 		arg.LanguagePk,
 		arg.Address,
-		arg.LastLogin,
 	)
 	var i User
 	err := row.Scan(
@@ -212,8 +208,7 @@ SET
     first_name = $5,
     last_name = $6,
     language_pk = $7,
-    address = $8,
-    last_login = $9
+    address = $8
 WHERE
     pk = $1
 RETURNING
@@ -229,7 +224,6 @@ type UpdateUserParams struct {
 	LastName   string
 	LanguagePk int64
 	Address    string
-	LastLogin  pgtype.Timestamptz
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
@@ -242,7 +236,6 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		arg.LastName,
 		arg.LanguagePk,
 		arg.Address,
-		arg.LastLogin,
 	)
 	var i User
 	err := row.Scan(

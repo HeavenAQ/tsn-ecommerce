@@ -1,6 +1,6 @@
 -- name: CreateOrder :one
-INSERT INTO orders (user_pk, status, total_price, shipping_address, shipping_date, delivered_date)
-    VALUES ($1, $2, $3, $4, $5, $6)
+INSERT INTO orders (user_pk, status, total_price, shipping_address, shipping_date, delivered_date, is_paid)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING
     *;
 
@@ -12,7 +12,7 @@ FROM
 WHERE
     pk = $1;
 
--- name: GetOrderByUser :one
+-- name: GetOrderByUser :many
 SELECT
     *
 FROM
@@ -36,7 +36,8 @@ SET
     total_price = $4,
     shipping_address = $5,
     shipping_date = $6,
-    delivered_date = $7
+    delivered_date = $7,
+    is_paid = $8
 WHERE
     pk = $1
 RETURNING

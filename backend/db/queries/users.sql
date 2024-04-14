@@ -1,6 +1,6 @@
 -- name: CreateUser :one
-INSERT INTO users (email, phone, PASSWORD, first_name, last_name, language_pk, address, last_login)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+INSERT INTO users (email, phone, PASSWORD, first_name, last_name, language_pk, address)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING
     *;
 
@@ -46,8 +46,7 @@ SET
     first_name = $5,
     last_name = $6,
     language_pk = $7,
-    address = $8,
-    last_login = $9
+    address = $8
 WHERE
     pk = $1
 RETURNING

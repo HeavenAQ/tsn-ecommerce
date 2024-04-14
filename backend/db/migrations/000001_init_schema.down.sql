@@ -11,8 +11,12 @@ DROP TRIGGER IF EXISTS on_update_updated_at ON products;
 
 DROP TRIGGER IF EXISTS on_update_updated_at ON languages;
 
+DROP TRIGGER IF EXISTS on_update_last_login ON users;
+
 -- Drop the function
 DROP FUNCTION IF EXISTS update_updated_at;
+
+DROP FUNCTION IF EXISTS update_last_login;
 
 -- Drop all tables
 DROP TABLE IF EXISTS order_details;

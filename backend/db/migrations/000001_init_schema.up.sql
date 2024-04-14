@@ -108,6 +108,21 @@ END;
 $$
 LANGUAGE 'plpgsql';
 
+CREATE FUNCTION update_last_login ()
+    RETURNS TRIGGER
+    AS $$
+BEGIN
+    NEW.last_login = now();
+    RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER on_update_last_login
+    BEFORE UPDATE ON users
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_last_login ();
+
 CREATE TRIGGER on_update_updated_at
     BEFORE UPDATE ON languages
     FOR EACH ROW

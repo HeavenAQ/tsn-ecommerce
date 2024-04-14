@@ -12,8 +12,8 @@ import (
 )
 
 const createOrder = `-- name: CreateOrder :one
-INSERT INTO orders (user_pk, status, total_price, shipping_address, shipping_date, delivered_date)
-    VALUES ($1, $2, $3, $4, $5, $6)
+INSERT INTO orders (user_pk, status, total_price, shipping_address, shipping_date, delivered_date, is_paid)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING
     pk, id, user_pk, status, is_paid, total_price, shipping_address, shipping_date, delivered_date, created_at, updated_at
 `
@@ -25,6 +25,7 @@ type CreateOrderParams struct {
 	ShippingAddress string
 	ShippingDate    pgtype.Timestamptz
 	DeliveredDate   pgtype.Timestamptz
+	IsPaid          bool
 }
 
 func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (Order, error) {
@@ -35,6 +36,7 @@ func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (Order
 		arg.ShippingAddress,
 		arg.ShippingDate,
 		arg.DeliveredDate,
+		arg.IsPaid,
 	)
 	var i Order
 	err := row.Scan(
@@ -91,7 +93,7 @@ func (q *Queries) GetOrder(ctx context.Context, pk int64) (Order, error) {
 	return i, err
 }
 
-const getOrderByUser = `-- name: GetOrderByUser :one
+const getOrderByUser = `-- name: GetOrderByUser :many
 SELECT
     pk, id, user_pk, status, is_paid, total_price, shipping_address, shipping_date, delivered_date, created_at, updated_at
 FROM
@@ -100,23 +102,36 @@ WHERE
     user_pk = $1
 `
 
-func (q *Queries) GetOrderByUser(ctx context.Context, userPk int64) (Order, error) {
-	row := q.db.QueryRow(ctx, getOrderByUser, userPk)
-	var i Order
-	err := row.Scan(
-		&i.Pk,
-		&i.ID,
-		&i.UserPk,
-		&i.Status,
-		&i.IsPaid,
-		&i.TotalPrice,
-		&i.ShippingAddress,
-		&i.ShippingDate,
-		&i.DeliveredDate,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
-	return i, err
+func (q *Queries) GetOrderByUser(ctx context.Context, userPk int64) ([]Order, error) {
+	rows, err := q.db.Query(ctx, getOrderByUser, userPk)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Order
+	for rows.Next() {
+		var i Order
+		if err := rows.Scan(
+			&i.Pk,
+			&i.ID,
+			&i.UserPk,
+			&i.Status,
+			&i.IsPaid,
+			&i.TotalPrice,
+			&i.ShippingAddress,
+			&i.ShippingDate,
+			&i.DeliveredDate,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const listOrders = `-- name: ListOrders :many
@@ -173,7 +188,8 @@ SET
     total_price = $4,
     shipping_address = $5,
     shipping_date = $6,
-    delivered_date = $7
+    delivered_date = $7,
+    is_paid = $8
 WHERE
     pk = $1
 RETURNING
@@ -188,6 +204,7 @@ type UpdateOrderParams struct {
 	ShippingAddress string
 	ShippingDate    pgtype.Timestamptz
 	DeliveredDate   pgtype.Timestamptz
+	IsPaid          bool
 }
 
 func (q *Queries) UpdateOrder(ctx context.Context, arg UpdateOrderParams) (Order, error) {
@@ -199,6 +216,7 @@ func (q *Queries) UpdateOrder(ctx context.Context, arg UpdateOrderParams) (Order
 		arg.ShippingAddress,
 		arg.ShippingDate,
 		arg.DeliveredDate,
+		arg.IsPaid,
 	)
 	var i Order
 	err := row.Scan(
