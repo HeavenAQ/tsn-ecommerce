@@ -20,13 +20,6 @@ FROM
 WHERE
     order_pk = $1;
 
--- name: ListOrderDetails :many
-SELECT
-    *
-FROM
-    order_details
-LIMIT $1 offset $2;
-
 -- name: UpdateOrderDetail :one
 UPDATE
     order_details

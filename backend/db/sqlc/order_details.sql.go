@@ -117,48 +117,6 @@ func (q *Queries) GetOrderDetailsByOrder(ctx context.Context, orderPk int64) ([]
 	return items, nil
 }
 
-const listOrderDetails = `-- name: ListOrderDetails :many
-SELECT
-    pk, order_pk, product_pk, quantity, price, discount, created_at, updated_at
-FROM
-    order_details
-LIMIT $1 offset $2
-`
-
-type ListOrderDetailsParams struct {
-	Limit  int32
-	Offset int32
-}
-
-func (q *Queries) ListOrderDetails(ctx context.Context, arg ListOrderDetailsParams) ([]OrderDetail, error) {
-	rows, err := q.db.Query(ctx, listOrderDetails, arg.Limit, arg.Offset)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []OrderDetail
-	for rows.Next() {
-		var i OrderDetail
-		if err := rows.Scan(
-			&i.Pk,
-			&i.OrderPk,
-			&i.ProductPk,
-			&i.Quantity,
-			&i.Price,
-			&i.Discount,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const updateOrderDetail = `-- name: UpdateOrderDetail :one
 UPDATE
     order_details
