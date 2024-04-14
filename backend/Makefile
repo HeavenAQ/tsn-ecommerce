@@ -1,5 +1,9 @@
-include .env
-export
+# Check if .env file exists
+ifeq ($(wildcard .env),)
+    $(info No .env file found, proceeding without it...)
+else
+    include .env
+endif
 
 migrate_up: 
 	@echo "Migrating up..."

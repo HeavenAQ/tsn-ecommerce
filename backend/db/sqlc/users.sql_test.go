@@ -57,13 +57,13 @@ func checkSameUser(t *testing.T, user1, user2 User) {
 }
 
 // Test user creation
-func TestCreateUser(t *testing.T) {
+func TestQueries_CreateUser(t *testing.T) {
 	user := createRandomUser(t)
 	testQueries.DeleteUser(context.Background(), user.Pk)
 }
 
 // Test user retrieval
-func TestGetUser(t *testing.T) {
+func TestQueries_GetUser(t *testing.T) {
 	user1 := createRandomUser(t)
 	user2, err := testQueries.GetUser(context.Background(), user1.Pk)
 	require.NoError(t, err)
@@ -74,7 +74,7 @@ func TestGetUser(t *testing.T) {
 	testQueries.DeleteUser(context.Background(), user1.Pk)
 }
 
-func TestGetUserByEmail(t *testing.T) {
+func TestQueries_GetUserByEmail(t *testing.T) {
 	user1 := createRandomUser(t)
 	user2, err := testQueries.GetUserByEmail(context.Background(), user1.Email)
 	require.NoError(t, err)
@@ -85,7 +85,7 @@ func TestGetUserByEmail(t *testing.T) {
 	testQueries.DeleteUser(context.Background(), user1.Pk)
 }
 
-func TestGetUserByPhone(t *testing.T) {
+func TestQueries_GetUserByPhone(t *testing.T) {
 	user1 := createRandomUser(t)
 	user2, err := testQueries.GetUserByPhone(context.Background(), user1.Phone)
 	require.NoError(t, err)
@@ -96,7 +96,7 @@ func TestGetUserByPhone(t *testing.T) {
 	testQueries.DeleteUser(context.Background(), user1.Pk)
 }
 
-func TestListUsers(t *testing.T) {
+func TestQueries_ListUsers(t *testing.T) {
 	num := 10
 	orders := make([]User, num)
 	for i := 0; i < num; i++ {
@@ -125,7 +125,7 @@ func TestListUsers(t *testing.T) {
 }
 
 // Test user update
-func TestUpdateUser(t *testing.T) {
+func TestQueries_UpdateUser(t *testing.T) {
 	user1 := createRandomUser(t)
 	arg := UpdateUserParams{
 		Pk:         user1.Pk,
@@ -161,7 +161,7 @@ func TestUpdateUser(t *testing.T) {
 	testQueries.DeleteUser(context.Background(), user1.Pk)
 }
 
-func TestDeleteUser(t *testing.T) {
+func TestQueries_DeleteUser(t *testing.T) {
 	user := createRandomUser(t)
 	err := testQueries.DeleteUser(context.Background(), user.Pk)
 	require.NoError(t, err)
