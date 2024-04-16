@@ -9,10 +9,10 @@ import (
 
 func createRandomProduct(t *testing.T) Product {
 	args := CreateProductParams{
-		Price:    100,
-		Image:    "image",
-		Status:   ProductStatusInStock,
-		Quantity: 10,
+		Price:     100,
+		ImageURLs: []string{"image"},
+		Status:    ProductStatusInStock,
+		Quantity:  10,
 	}
 
 	// create a product with random data and check for errors
@@ -24,7 +24,7 @@ func createRandomProduct(t *testing.T) Product {
 	require.NotZero(t, product.Pk)
 	require.NotZero(t, product.ID)
 	require.Equal(t, args.Price, product.Price)
-	require.Equal(t, args.Image, product.Image)
+	require.Equal(t, args.ImageURLs, product.ImageURLs)
 	require.Equal(t, args.Status, product.Status)
 	require.Equal(t, args.Quantity, product.Quantity)
 	require.NotZero(t, product.CreatedAt)
@@ -49,7 +49,7 @@ func TestQueries_GetProduct(t *testing.T) {
 	require.Equal(t, product1.Pk, product2.Pk)
 	require.Equal(t, product1.ID, product2.ID)
 	require.Equal(t, product1.Price, product2.Price)
-	require.Equal(t, product1.Image, product2.Image)
+	require.Equal(t, product1.ImageURLs, product2.ImageURLs)
 	require.Equal(t, product1.Status, product2.Status)
 	require.Equal(t, product1.Quantity, product2.Quantity)
 	require.WithinDuration(t, product1.CreatedAt.Time, product2.CreatedAt.Time, 0)
@@ -90,11 +90,11 @@ func TestQueries_ListProducts(t *testing.T) {
 func TestQueries_UpdateProduct(t *testing.T) {
 	product1 := createRandomProduct(t)
 	args := UpdateProductParams{
-		Pk:       product1.Pk,
-		Price:    200,
-		Image:    "image2",
-		Status:   ProductStatusOutOfStock,
-		Quantity: 20,
+		Pk:        product1.Pk,
+		Price:     200,
+		ImageURLs: []string{"image2", "image3"},
+		Status:    ProductStatusOutOfStock,
+		Quantity:  20,
 	}
 
 	// update the product and check for errors
@@ -106,7 +106,7 @@ func TestQueries_UpdateProduct(t *testing.T) {
 	require.Equal(t, product1.Pk, product2.Pk)
 	require.Equal(t, product1.ID, product2.ID)
 	require.Equal(t, args.Price, product2.Price)
-	require.Equal(t, args.Image, product2.Image)
+	require.Equal(t, args.ImageURLs, product2.ImageURLs)
 	require.Equal(t, args.Status, product2.Status)
 	require.Equal(t, args.Quantity, product2.Quantity)
 	require.WithinDuration(t, product1.CreatedAt.Time, product2.CreatedAt.Time, 0)

@@ -1,5 +1,5 @@
 -- name: CreateProduct :one
-INSERT INTO products (price, image, status, quantity)
+INSERT INTO products (price, "imageURLs", status, quantity)
     VALUES ($1, $2, $3, $4)
 RETURNING
     *;
@@ -24,9 +24,19 @@ UPDATE
     products
 SET
     price = $2,
-    image = $3,
+    "imageURLs" = $3,
     status = $4,
     quantity = $5
+WHERE
+    pk = $1
+RETURNING
+    *;
+
+-- name: UpdateProductIdxImageURL :one
+UPDATE
+    products
+SET
+    "imageURLs"[$2] = $3
 WHERE
     pk = $1
 RETURNING

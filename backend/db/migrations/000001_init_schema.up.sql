@@ -38,7 +38,7 @@ CREATE TABLE "products" (
     "id" uuid DEFAULT uuid_generate_v4 (),
     "price" int NOT NULL DEFAULT 0,
     "discount" int NOT NULL DEFAULT 0,
-    "image" text NOT NULL DEFAULT '',
+    "imageURLs" text[] NOT NULL DEFAULT ARRAY[] ::text[],
     "status" product_status NOT NULL DEFAULT 'in-stock',
     "quantity" int NOT NULL DEFAULT 0,
     "created_at" timestamptz NOT NULL DEFAULT now(),

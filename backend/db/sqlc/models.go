@@ -178,7 +178,7 @@ type Product struct {
 	ID        pgtype.UUID
 	Price     int32
 	Discount  int32
-	Image     string
+	ImageURLs []string
 	Status    ProductStatus
 	Quantity  int32
 	CreatedAt pgtype.Timestamptz
