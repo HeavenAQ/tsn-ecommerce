@@ -1,5 +1,6 @@
 -- name: CreateProductTranslation :one
-INSERT INTO product_translations (product_pk, language_pk, name, description, category)
+INSERT INTO product_translations (product_pk,
+    LANGUAGE, name, description, category)
     VALUES ($1, $2, $3, $4, $5)
 RETURNING
     *;
@@ -11,7 +12,9 @@ FROM
     product_translations
 WHERE
     product_pk = $1
-    AND language_pk = $2
+    AND
+    LANGUAGE =
+    $2
 LIMIT 1;
 
 -- name: UpdateProductTranslation :one
@@ -23,11 +26,15 @@ SET
     category = $5
 WHERE
     product_pk = $1
-    AND language_pk = $2
+    AND
+    LANGUAGE =
+    $2
 RETURNING
     *;
 
 -- name: DeleteProductTranslation :exec
 DELETE FROM product_translations
 WHERE product_pk = $1
-    AND language_pk = $2;
+    AND
+    LANGUAGE =
+    $2;

@@ -12,7 +12,7 @@ func createRandomProductTranslation(t *testing.T) ProductTranslation {
 	product := createRandomProduct(t)
 	args := CreateProductTranslationParams{
 		ProductPk:   product.Pk,
-		LanguagePk:  1,
+		Language:    LanguageCode(utils.RandomLanguage()),
 		Name:        utils.RandomAlphabetString(10),
 		Description: utils.RandomAlphabetString(10),
 		Category:    utils.RandomAlphabetString(10),
@@ -22,7 +22,7 @@ func createRandomProductTranslation(t *testing.T) ProductTranslation {
 	require.NotEmpty(t, productTranslation)
 	require.NotZero(t, productTranslation.Pk)
 	require.Equal(t, args.ProductPk, productTranslation.ProductPk)
-	require.Equal(t, args.LanguagePk, productTranslation.LanguagePk)
+	require.Equal(t, args.Language, productTranslation.Language)
 	require.Equal(t, args.Name, productTranslation.Name)
 	require.Equal(t, args.Description, productTranslation.Description)
 	require.Equal(t, args.Category, productTranslation.Category)
@@ -33,8 +33,8 @@ func TestQueries_CreateProductTranslation(t *testing.T) {
 	productTranslation := createRandomProductTranslation(t)
 	// clean up
 	testQueries.DeleteProductTranslation(context.Background(), DeleteProductTranslationParams{
-		ProductPk:  productTranslation.ProductPk,
-		LanguagePk: productTranslation.LanguagePk,
+		ProductPk: productTranslation.ProductPk,
+		Language:  productTranslation.Language,
 	})
 }
 
@@ -42,8 +42,8 @@ func TestQueries_GetProductTranslation(t *testing.T) {
 	// create a product translation and check for errors
 	productTranslation1 := createRandomProductTranslation(t)
 	productTranslation2, err := testQueries.GetProductTranslation(context.Background(), GetProductTranslationParams{
-		ProductPk:  productTranslation1.ProductPk,
-		LanguagePk: productTranslation1.LanguagePk,
+		ProductPk: productTranslation1.ProductPk,
+		Language:  productTranslation1.Language,
 	})
 	require.NoError(t, err)
 	require.NotEmpty(t, productTranslation2)
@@ -51,7 +51,7 @@ func TestQueries_GetProductTranslation(t *testing.T) {
 	// check if the product translation is created correctly
 	require.Equal(t, productTranslation1.Pk, productTranslation2.Pk)
 	require.Equal(t, productTranslation1.ProductPk, productTranslation2.ProductPk)
-	require.Equal(t, productTranslation1.LanguagePk, productTranslation2.LanguagePk)
+	require.Equal(t, productTranslation1.Language, productTranslation2.Language)
 	require.Equal(t, productTranslation1.Name, productTranslation2.Name)
 	require.Equal(t, productTranslation1.Description, productTranslation2.Description)
 	require.Equal(t, productTranslation1.Category, productTranslation2.Category)
@@ -60,8 +60,8 @@ func TestQueries_GetProductTranslation(t *testing.T) {
 
 	// clean up
 	testQueries.DeleteProductTranslation(context.Background(), DeleteProductTranslationParams{
-		ProductPk:  productTranslation1.ProductPk,
-		LanguagePk: productTranslation1.LanguagePk,
+		ProductPk: productTranslation1.ProductPk,
+		Language:  productTranslation1.Language,
 	})
 }
 
@@ -72,7 +72,7 @@ func TestQueries_UpdateProductTranslation(t *testing.T) {
 		Name:        utils.RandomAlphabetString(10),
 		Description: utils.RandomAlphabetString(10),
 		Category:    utils.RandomAlphabetString(10),
-		LanguagePk:  productTranslation.LanguagePk,
+		Language:    productTranslation.Language,
 		ProductPk:   productTranslation.ProductPk,
 	}
 	productTranslation, err := testQueries.UpdateProductTranslation(context.Background(), args)
@@ -82,15 +82,15 @@ func TestQueries_UpdateProductTranslation(t *testing.T) {
 	// ensure everything is updated
 	require.Equal(t, args.Name, productTranslation.Name)
 	require.Equal(t, args.Category, productTranslation.Category)
-	require.Equal(t, args.LanguagePk, productTranslation.LanguagePk)
+	require.Equal(t, args.Language, productTranslation.Language)
 	require.Equal(t, args.ProductPk, productTranslation.ProductPk)
 	require.Equal(t, args.Description, productTranslation.Description)
 	require.WithinDuration(t, productTranslation.CreatedAt.Time, productTranslation.CreatedAt.Time, 0)
 
 	// clean up
 	testQueries.DeleteProductTranslation(context.Background(), DeleteProductTranslationParams{
-		ProductPk:  productTranslation.ProductPk,
-		LanguagePk: productTranslation.LanguagePk,
+		ProductPk: productTranslation.ProductPk,
+		Language:  productTranslation.Language,
 	})
 }
 
@@ -98,15 +98,15 @@ func TestQueries_DeleteProductTranslation(t *testing.T) {
 	// get the product translation
 	productTranslation := createRandomProductTranslation(t)
 	args := DeleteProductTranslationParams{
-		ProductPk:  productTranslation.ProductPk,
-		LanguagePk: productTranslation.LanguagePk,
+		ProductPk: productTranslation.ProductPk,
+		Language:  productTranslation.Language,
 	}
 	testQueries.DeleteProductTranslation(context.Background(), args)
 
 	// check if the product translation is deleted
 	_, err := testQueries.GetProductTranslation(context.Background(), GetProductTranslationParams{
-		ProductPk:  args.ProductPk,
-		LanguagePk: args.LanguagePk,
+		ProductPk: args.ProductPk,
+		Language:  args.Language,
 	})
 
 	// check if there is an error

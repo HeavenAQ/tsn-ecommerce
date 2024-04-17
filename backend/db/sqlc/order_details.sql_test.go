@@ -86,6 +86,7 @@ func TestQueries_GetOrderDetailsByOrder(t *testing.T) {
 		require.Equal(t, order.Pk, orderDetail.OrderPk)
 		// clean up
 		testQueries.DeleteOrderDetail(context.Background(), orderDetail.Pk)
+		testQueries.DeleteProduct(context.Background(), orderDetail.ProductPk)
 	}
 }
 

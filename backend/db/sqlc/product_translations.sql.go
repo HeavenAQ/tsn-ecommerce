@@ -10,15 +10,16 @@ import (
 )
 
 const createProductTranslation = `-- name: CreateProductTranslation :one
-INSERT INTO product_translations (product_pk, language_pk, name, description, category)
+INSERT INTO product_translations (product_pk,
+    LANGUAGE, name, description, category)
     VALUES ($1, $2, $3, $4, $5)
 RETURNING
-    pk, product_pk, language_pk, name, description, category, created_at, updated_at
+    pk, product_pk, language, name, description, category, created_at, updated_at
 `
 
 type CreateProductTranslationParams struct {
 	ProductPk   int64
-	LanguagePk  int64
+	Language    LanguageCode
 	Name        string
 	Description string
 	Category    string
@@ -27,7 +28,7 @@ type CreateProductTranslationParams struct {
 func (q *Queries) CreateProductTranslation(ctx context.Context, arg CreateProductTranslationParams) (ProductTranslation, error) {
 	row := q.db.QueryRow(ctx, createProductTranslation,
 		arg.ProductPk,
-		arg.LanguagePk,
+		arg.Language,
 		arg.Name,
 		arg.Description,
 		arg.Category,
@@ -36,7 +37,7 @@ func (q *Queries) CreateProductTranslation(ctx context.Context, arg CreateProduc
 	err := row.Scan(
 		&i.Pk,
 		&i.ProductPk,
-		&i.LanguagePk,
+		&i.Language,
 		&i.Name,
 		&i.Description,
 		&i.Category,
@@ -49,42 +50,46 @@ func (q *Queries) CreateProductTranslation(ctx context.Context, arg CreateProduc
 const deleteProductTranslation = `-- name: DeleteProductTranslation :exec
 DELETE FROM product_translations
 WHERE product_pk = $1
-    AND language_pk = $2
+    AND
+    LANGUAGE =
+    $2
 `
 
 type DeleteProductTranslationParams struct {
-	ProductPk  int64
-	LanguagePk int64
+	ProductPk int64
+	Language  LanguageCode
 }
 
 func (q *Queries) DeleteProductTranslation(ctx context.Context, arg DeleteProductTranslationParams) error {
-	_, err := q.db.Exec(ctx, deleteProductTranslation, arg.ProductPk, arg.LanguagePk)
+	_, err := q.db.Exec(ctx, deleteProductTranslation, arg.ProductPk, arg.Language)
 	return err
 }
 
 const getProductTranslation = `-- name: GetProductTranslation :one
 SELECT
-    pk, product_pk, language_pk, name, description, category, created_at, updated_at
+    pk, product_pk, language, name, description, category, created_at, updated_at
 FROM
     product_translations
 WHERE
     product_pk = $1
-    AND language_pk = $2
+    AND
+    LANGUAGE =
+    $2
 LIMIT 1
 `
 
 type GetProductTranslationParams struct {
-	ProductPk  int64
-	LanguagePk int64
+	ProductPk int64
+	Language  LanguageCode
 }
 
 func (q *Queries) GetProductTranslation(ctx context.Context, arg GetProductTranslationParams) (ProductTranslation, error) {
-	row := q.db.QueryRow(ctx, getProductTranslation, arg.ProductPk, arg.LanguagePk)
+	row := q.db.QueryRow(ctx, getProductTranslation, arg.ProductPk, arg.Language)
 	var i ProductTranslation
 	err := row.Scan(
 		&i.Pk,
 		&i.ProductPk,
-		&i.LanguagePk,
+		&i.Language,
 		&i.Name,
 		&i.Description,
 		&i.Category,
@@ -103,14 +108,16 @@ SET
     category = $5
 WHERE
     product_pk = $1
-    AND language_pk = $2
+    AND
+    LANGUAGE =
+    $2
 RETURNING
-    pk, product_pk, language_pk, name, description, category, created_at, updated_at
+    pk, product_pk, language, name, description, category, created_at, updated_at
 `
 
 type UpdateProductTranslationParams struct {
 	ProductPk   int64
-	LanguagePk  int64
+	Language    LanguageCode
 	Name        string
 	Description string
 	Category    string
@@ -119,7 +126,7 @@ type UpdateProductTranslationParams struct {
 func (q *Queries) UpdateProductTranslation(ctx context.Context, arg UpdateProductTranslationParams) (ProductTranslation, error) {
 	row := q.db.QueryRow(ctx, updateProductTranslation,
 		arg.ProductPk,
-		arg.LanguagePk,
+		arg.Language,
 		arg.Name,
 		arg.Description,
 		arg.Category,
@@ -128,7 +135,7 @@ func (q *Queries) UpdateProductTranslation(ctx context.Context, arg UpdateProduc
 	err := row.Scan(
 		&i.Pk,
 		&i.ProductPk,
-		&i.LanguagePk,
+		&i.Language,
 		&i.Name,
 		&i.Description,
 		&i.Category,

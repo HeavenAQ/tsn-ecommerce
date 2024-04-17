@@ -141,13 +141,6 @@ func (ns NullProductStatus) Value() (driver.Value, error) {
 	return string(ns.ProductStatus), nil
 }
 
-type Language struct {
-	Pk        int64
-	Code      LanguageCode
-	CreatedAt pgtype.Timestamptz
-	UpdatedAt pgtype.Timestamptz
-}
-
 type Order struct {
 	Pk              int64
 	ID              pgtype.UUID
@@ -188,7 +181,7 @@ type Product struct {
 type ProductTranslation struct {
 	Pk          int64
 	ProductPk   int64
-	LanguagePk  int64
+	Language    LanguageCode
 	Name        string
 	Description string
 	Category    string
@@ -197,16 +190,16 @@ type ProductTranslation struct {
 }
 
 type User struct {
-	Pk         int64
-	ID         pgtype.UUID
-	Email      string
-	Phone      string
-	Password   string
-	FirstName  string
-	LastName   string
-	LanguagePk int64
-	Address    string
-	LastLogin  pgtype.Timestamptz
-	CreatedAt  pgtype.Timestamptz
-	UpdatedAt  pgtype.Timestamptz
+	Pk        int64
+	ID        pgtype.UUID
+	Email     string
+	Phone     string
+	Password  string
+	FirstName string
+	LastName  string
+	Language  LanguageCode
+	Address   string
+	LastLogin pgtype.Timestamptz
+	CreatedAt pgtype.Timestamptz
+	UpdatedAt pgtype.Timestamptz
 }

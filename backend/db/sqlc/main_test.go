@@ -12,6 +12,7 @@ import (
 )
 
 var testQueries *Queries
+var testStore *Store
 
 func TestMain(m *testing.M) {
 	// load .env file
@@ -42,5 +43,6 @@ func TestMain(m *testing.M) {
 
 	// set up queries and run
 	testQueries = New(testDBPool)
+	testStore = NewStore(testDBPool)
 	m.Run()
 }

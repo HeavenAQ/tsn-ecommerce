@@ -55,6 +55,45 @@ func (q *Queries) DeleteProduct(ctx context.Context, pk int64) error {
 	return err
 }
 
+const getProdcutByStatus = `-- name: GetProdcutByStatus :many
+SELECT
+    pk, id, price, discount, "imageURLs", status, quantity, created_at, updated_at
+FROM
+    products
+WHERE
+    status = $1
+`
+
+func (q *Queries) GetProdcutByStatus(ctx context.Context, status ProductStatus) ([]Product, error) {
+	rows, err := q.db.Query(ctx, getProdcutByStatus, status)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Product
+	for rows.Next() {
+		var i Product
+		if err := rows.Scan(
+			&i.Pk,
+			&i.ID,
+			&i.Price,
+			&i.Discount,
+			&i.ImageURLs,
+			&i.Status,
+			&i.Quantity,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getProduct = `-- name: GetProduct :one
 SELECT
     pk, id, price, discount, "imageURLs", status, quantity, created_at, updated_at
@@ -79,6 +118,96 @@ func (q *Queries) GetProduct(ctx context.Context, pk int64) (Product, error) {
 		&i.UpdatedAt,
 	)
 	return i, err
+}
+
+const getProductByPrice = `-- name: GetProductByPrice :many
+SELECT
+    pk, id, price, discount, "imageURLs", status, quantity, created_at, updated_at
+FROM
+    products
+WHERE
+    price >= $1
+    AND price <= $2
+`
+
+type GetProductByPriceParams struct {
+	Price   int32
+	Price_2 int32
+}
+
+func (q *Queries) GetProductByPrice(ctx context.Context, arg GetProductByPriceParams) ([]Product, error) {
+	rows, err := q.db.Query(ctx, getProductByPrice, arg.Price, arg.Price_2)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Product
+	for rows.Next() {
+		var i Product
+		if err := rows.Scan(
+			&i.Pk,
+			&i.ID,
+			&i.Price,
+			&i.Discount,
+			&i.ImageURLs,
+			&i.Status,
+			&i.Quantity,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getProductByQuantity = `-- name: GetProductByQuantity :many
+SELECT
+    pk, id, price, discount, "imageURLs", status, quantity, created_at, updated_at
+FROM
+    products
+WHERE
+    quantity >= $1
+    AND quantity <= $2
+`
+
+type GetProductByQuantityParams struct {
+	Quantity   int32
+	Quantity_2 int32
+}
+
+func (q *Queries) GetProductByQuantity(ctx context.Context, arg GetProductByQuantityParams) ([]Product, error) {
+	rows, err := q.db.Query(ctx, getProductByQuantity, arg.Quantity, arg.Quantity_2)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Product
+	for rows.Next() {
+		var i Product
+		if err := rows.Scan(
+			&i.Pk,
+			&i.ID,
+			&i.Price,
+			&i.Discount,
+			&i.ImageURLs,
+			&i.Status,
+			&i.Quantity,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const listProducts = `-- name: ListProducts :many

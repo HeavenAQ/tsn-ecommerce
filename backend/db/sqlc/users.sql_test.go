@@ -11,13 +11,13 @@ import (
 func createRandomUser(t *testing.T) User {
 	// create a user with random data
 	arg := CreateUserParams{
-		Email:      utils.RandomNumberString(6) + "@gmail.com",
-		Phone:      utils.RandomNumberString(10),
-		Password:   utils.RandomAlphabetString(6),
-		FirstName:  utils.RandomUserName(),
-		LastName:   utils.RandomUserName(),
-		LanguagePk: 1,
-		Address:    utils.RandomAlphabetString(10),
+		Email:     utils.RandomNumberString(6) + "@gmail.com",
+		Phone:     utils.RandomNumberString(10),
+		Password:  utils.RandomAlphabetString(6),
+		FirstName: utils.RandomUserName(),
+		LastName:  utils.RandomUserName(),
+		Language:  LanguageCode(utils.RandomLanguage()),
+		Address:   utils.RandomAlphabetString(10),
 	}
 
 	user, err := testQueries.CreateUser(context.Background(), arg)
@@ -31,7 +31,7 @@ func createRandomUser(t *testing.T) User {
 	require.Equal(t, arg.Phone, user.Phone)
 	require.Equal(t, arg.FirstName, user.FirstName)
 	require.Equal(t, arg.LastName, user.LastName)
-	require.Equal(t, arg.LanguagePk, user.LanguagePk)
+	require.Equal(t, arg.Language, user.Language)
 	require.Equal(t, arg.Address, user.Address)
 	require.NotZero(t, user.Pk)
 	require.NotZero(t, user.ID)
@@ -49,7 +49,7 @@ func checkSameUser(t *testing.T, user1, user2 User) {
 	require.Equal(t, user1.Password, user2.Password)
 	require.Equal(t, user1.FirstName, user2.FirstName)
 	require.Equal(t, user1.LastName, user2.LastName)
-	require.Equal(t, user1.LanguagePk, user2.LanguagePk)
+	require.Equal(t, user1.Language, user2.Language)
 	require.Equal(t, user1.Address, user2.Address)
 	require.WithinDuration(t, user1.CreatedAt.Time, user2.CreatedAt.Time, 0)
 	require.WithinDuration(t, user1.UpdatedAt.Time, user2.UpdatedAt.Time, 0)
@@ -128,14 +128,14 @@ func TestQueries_ListUsers(t *testing.T) {
 func TestQueries_UpdateUser(t *testing.T) {
 	user1 := createRandomUser(t)
 	arg := UpdateUserParams{
-		Pk:         user1.Pk,
-		Password:   utils.RandomAlphabetString(6),
-		Email:      utils.RandomNumberString(6) + "@gmail.com",
-		Phone:      utils.RandomNumberString(10),
-		FirstName:  utils.RandomUserName(),
-		LastName:   utils.RandomUserName(),
-		LanguagePk: 1,
-		Address:    utils.RandomAlphabetString(10),
+		Pk:        user1.Pk,
+		Password:  utils.RandomAlphabetString(6),
+		Email:     utils.RandomNumberString(6) + "@gmail.com",
+		Phone:     utils.RandomNumberString(10),
+		FirstName: utils.RandomUserName(),
+		LastName:  utils.RandomUserName(),
+		Language:  LanguageCode(utils.RandomLanguage()),
+		Address:   utils.RandomAlphabetString(10),
 	}
 
 	// update user and check for errors
@@ -148,7 +148,7 @@ func TestQueries_UpdateUser(t *testing.T) {
 	require.Equal(t, arg.Phone, user2.Phone)
 	require.Equal(t, arg.FirstName, user2.FirstName)
 	require.Equal(t, arg.LastName, user2.LastName)
-	require.Equal(t, arg.LanguagePk, user2.LanguagePk)
+	require.Equal(t, arg.Language, user2.Language)
 	require.Equal(t, arg.Address, user2.Address)
 	require.Equal(t, user1.Pk, user2.Pk)
 	require.Equal(t, user1.ID, user2.ID)

@@ -20,18 +20,6 @@ CREATE TYPE order_status AS ENUM (
     'cancelled'
 );
 
--- Languages table
-CREATE TABLE "languages" (
-    "pk" bigserial PRIMARY KEY,
-    "code" language_code NOT NULL DEFAULT 'chn',
-    "created_at" timestamptz NOT NULL DEFAULT now(),
-    "updated_at" timestamptz NOT NULL DEFAULT now()
-);
-
-INSERT INTO languages (code)
-    VALUES ('chn'),
-    ('jp');
-
 -- Products table
 CREATE TABLE "products" (
     "pk" bigserial PRIMARY KEY,
@@ -48,7 +36,7 @@ CREATE TABLE "products" (
 CREATE TABLE "product_translations" (
     "pk" bigserial PRIMARY KEY,
     "product_pk" bigint NOT NULL REFERENCES products (pk) ON DELETE CASCADE,
-    "language_pk" bigint NOT NULL REFERENCES languages (pk) ON DELETE CASCADE,
+    "language" language_code NOT NULL DEFAULT 'chn',
     "name" text NOT NULL DEFAULT '',
     "description" text NOT NULL DEFAULT '',
     "category" text NOT NULL DEFAULT '',
@@ -65,7 +53,7 @@ CREATE TABLE "users" (
     "password" text NOT NULL DEFAULT '',
     "first_name" text NOT NULL DEFAULT '',
     "last_name" text NOT NULL DEFAULT '',
-    "language_pk" bigint NOT NULL REFERENCES languages (pk),
+    "language" language_code NOT NULL DEFAULT 'chn',
     "address" text NOT NULL DEFAULT '',
     "last_login" timestamptz NOT NULL DEFAULT now(),
     "created_at" timestamptz NOT NULL DEFAULT now(),
@@ -122,11 +110,6 @@ CREATE TRIGGER on_update_last_login
     BEFORE UPDATE ON users
     FOR EACH ROW
     EXECUTE PROCEDURE update_last_login ();
-
-CREATE TRIGGER on_update_updated_at
-    BEFORE UPDATE ON languages
-    FOR EACH ROW
-    EXECUTE PROCEDURE update_updated_at ();
 
 CREATE TRIGGER on_update_updated_at
     BEFORE UPDATE ON products

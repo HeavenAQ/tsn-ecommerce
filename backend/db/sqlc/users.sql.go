@@ -10,20 +10,21 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (email, phone, PASSWORD, first_name, last_name, language_pk, address)
+INSERT INTO users (email, phone, PASSWORD, first_name, last_name,
+    LANGUAGE, address)
     VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING
-    pk, id, email, phone, password, first_name, last_name, language_pk, address, last_login, created_at, updated_at
+    pk, id, email, phone, password, first_name, last_name, language, address, last_login, created_at, updated_at
 `
 
 type CreateUserParams struct {
-	Email      string
-	Phone      string
-	Password   string
-	FirstName  string
-	LastName   string
-	LanguagePk int64
-	Address    string
+	Email     string
+	Phone     string
+	Password  string
+	FirstName string
+	LastName  string
+	Language  LanguageCode
+	Address   string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
@@ -33,7 +34,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		arg.Password,
 		arg.FirstName,
 		arg.LastName,
-		arg.LanguagePk,
+		arg.Language,
 		arg.Address,
 	)
 	var i User
@@ -45,7 +46,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.Password,
 		&i.FirstName,
 		&i.LastName,
-		&i.LanguagePk,
+		&i.Language,
 		&i.Address,
 		&i.LastLogin,
 		&i.CreatedAt,
@@ -66,7 +67,7 @@ func (q *Queries) DeleteUser(ctx context.Context, pk int64) error {
 
 const getUser = `-- name: GetUser :one
 SELECT
-    pk, id, email, phone, password, first_name, last_name, language_pk, address, last_login, created_at, updated_at
+    pk, id, email, phone, password, first_name, last_name, language, address, last_login, created_at, updated_at
 FROM
     users
 WHERE
@@ -85,7 +86,7 @@ func (q *Queries) GetUser(ctx context.Context, pk int64) (User, error) {
 		&i.Password,
 		&i.FirstName,
 		&i.LastName,
-		&i.LanguagePk,
+		&i.Language,
 		&i.Address,
 		&i.LastLogin,
 		&i.CreatedAt,
@@ -96,7 +97,7 @@ func (q *Queries) GetUser(ctx context.Context, pk int64) (User, error) {
 
 const getUserByEmail = `-- name: GetUserByEmail :one
 SELECT
-    pk, id, email, phone, password, first_name, last_name, language_pk, address, last_login, created_at, updated_at
+    pk, id, email, phone, password, first_name, last_name, language, address, last_login, created_at, updated_at
 FROM
     users
 WHERE
@@ -114,7 +115,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.Password,
 		&i.FirstName,
 		&i.LastName,
-		&i.LanguagePk,
+		&i.Language,
 		&i.Address,
 		&i.LastLogin,
 		&i.CreatedAt,
@@ -125,7 +126,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 
 const getUserByPhone = `-- name: GetUserByPhone :one
 SELECT
-    pk, id, email, phone, password, first_name, last_name, language_pk, address, last_login, created_at, updated_at
+    pk, id, email, phone, password, first_name, last_name, language, address, last_login, created_at, updated_at
 FROM
     users
 WHERE
@@ -143,7 +144,7 @@ func (q *Queries) GetUserByPhone(ctx context.Context, phone string) (User, error
 		&i.Password,
 		&i.FirstName,
 		&i.LastName,
-		&i.LanguagePk,
+		&i.Language,
 		&i.Address,
 		&i.LastLogin,
 		&i.CreatedAt,
@@ -154,7 +155,7 @@ func (q *Queries) GetUserByPhone(ctx context.Context, phone string) (User, error
 
 const listUsers = `-- name: ListUsers :many
 SELECT
-    pk, id, email, phone, password, first_name, last_name, language_pk, address, last_login, created_at, updated_at
+    pk, id, email, phone, password, first_name, last_name, language, address, last_login, created_at, updated_at
 FROM
     users
 LIMIT $1 OFFSET $2
@@ -182,7 +183,7 @@ func (q *Queries) ListUsers(ctx context.Context, arg ListUsersParams) ([]User, e
 			&i.Password,
 			&i.FirstName,
 			&i.LastName,
-			&i.LanguagePk,
+			&i.Language,
 			&i.Address,
 			&i.LastLogin,
 			&i.CreatedAt,
@@ -207,23 +208,24 @@ SET
     PASSWORD = $4,
     first_name = $5,
     last_name = $6,
-    language_pk = $7,
+    LANGUAGE =
+    $7,
     address = $8
 WHERE
     pk = $1
 RETURNING
-    pk, id, email, phone, password, first_name, last_name, language_pk, address, last_login, created_at, updated_at
+    pk, id, email, phone, password, first_name, last_name, language, address, last_login, created_at, updated_at
 `
 
 type UpdateUserParams struct {
-	Pk         int64
-	Email      string
-	Phone      string
-	Password   string
-	FirstName  string
-	LastName   string
-	LanguagePk int64
-	Address    string
+	Pk        int64
+	Email     string
+	Phone     string
+	Password  string
+	FirstName string
+	LastName  string
+	Language  LanguageCode
+	Address   string
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
@@ -234,7 +236,7 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		arg.Password,
 		arg.FirstName,
 		arg.LastName,
-		arg.LanguagePk,
+		arg.Language,
 		arg.Address,
 	)
 	var i User
@@ -246,7 +248,7 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		&i.Password,
 		&i.FirstName,
 		&i.LastName,
-		&i.LanguagePk,
+		&i.Language,
 		&i.Address,
 		&i.LastLogin,
 		&i.CreatedAt,

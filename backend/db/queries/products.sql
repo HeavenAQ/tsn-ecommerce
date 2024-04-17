@@ -45,3 +45,29 @@ RETURNING
 -- name: DeleteProduct :exec
 DELETE FROM products
 WHERE pk = $1;
+
+-- name: GetProdcutByStatus :many
+SELECT
+    *
+FROM
+    products
+WHERE
+    status = $1;
+
+-- name: GetProductByPrice :many
+SELECT
+    *
+FROM
+    products
+WHERE
+    price >= $1
+    AND price <= $2;
+
+-- name: GetProductByQuantity :many
+SELECT
+    *
+FROM
+    products
+WHERE
+    quantity >= $1
+    AND quantity <= $2;
