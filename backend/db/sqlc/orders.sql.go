@@ -19,13 +19,13 @@ RETURNING
 `
 
 type CreateOrderParams struct {
-	UserPk          int64
-	Status          OrderStatus
-	TotalPrice      int32
-	ShippingAddress string
-	ShippingDate    pgtype.Timestamptz
-	DeliveredDate   pgtype.Timestamptz
-	IsPaid          bool
+	UserPk          int64              `json:"user_pk"`
+	Status          OrderStatus        `json:"status"`
+	TotalPrice      int32              `json:"total_price"`
+	ShippingAddress string             `json:"shipping_address"`
+	ShippingDate    pgtype.Timestamptz `json:"shipping_date"`
+	DeliveredDate   pgtype.Timestamptz `json:"delivered_date"`
+	IsPaid          bool               `json:"is_paid"`
 }
 
 func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (Order, error) {
@@ -143,8 +143,8 @@ LIMIT $1 offset $2
 `
 
 type ListOrdersParams struct {
-	Limit  int32
-	Offset int32
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
 }
 
 func (q *Queries) ListOrders(ctx context.Context, arg ListOrdersParams) ([]Order, error) {
@@ -197,14 +197,14 @@ RETURNING
 `
 
 type UpdateOrderParams struct {
-	Pk              int64
-	UserPk          int64
-	Status          OrderStatus
-	TotalPrice      int32
-	ShippingAddress string
-	ShippingDate    pgtype.Timestamptz
-	DeliveredDate   pgtype.Timestamptz
-	IsPaid          bool
+	Pk              int64              `json:"pk"`
+	UserPk          int64              `json:"user_pk"`
+	Status          OrderStatus        `json:"status"`
+	TotalPrice      int32              `json:"total_price"`
+	ShippingAddress string             `json:"shipping_address"`
+	ShippingDate    pgtype.Timestamptz `json:"shipping_date"`
+	DeliveredDate   pgtype.Timestamptz `json:"delivered_date"`
+	IsPaid          bool               `json:"is_paid"`
 }
 
 func (q *Queries) UpdateOrder(ctx context.Context, arg UpdateOrderParams) (Order, error) {

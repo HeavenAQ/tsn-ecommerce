@@ -13,7 +13,6 @@ import (
 
 const getProductWithInfo = `-- name: GetProductWithInfo :one
 SELECT
-    products.pk,
     products.price,
     products.id,
     products."imageURLs",
@@ -28,34 +27,32 @@ FROM
     products
     INNER JOIN product_translations ON products.pk = product_translations.product_pk
 WHERE
-    products.pk = $1
+    products.id = $1
     AND product_translations.language = $2
 `
 
 type GetProductWithInfoParams struct {
-	Pk       int64
-	Language LanguageCode
+	ID       pgtype.UUID  `json:"id"`
+	Language LanguageCode `json:"language"`
 }
 
 type GetProductWithInfoRow struct {
-	Pk          int64
-	Price       int32
-	ID          pgtype.UUID
-	ImageURLs   []string
-	Status      ProductStatus
-	Quantity    int32
-	CreatedAt   pgtype.Timestamptz
-	UpdatedAt   pgtype.Timestamptz
-	Category    string
-	Name        string
-	Description string
+	Price       int32              `json:"price"`
+	ID          pgtype.UUID        `json:"id"`
+	ImageURLs   []string           `json:"imageURLs"`
+	Status      ProductStatus      `json:"status"`
+	Quantity    int32              `json:"quantity"`
+	CreatedAt   pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt   pgtype.Timestamptz `json:"updated_at"`
+	Category    string             `json:"category"`
+	Name        string             `json:"name"`
+	Description string             `json:"description"`
 }
 
 func (q *Queries) GetProductWithInfo(ctx context.Context, arg GetProductWithInfoParams) (GetProductWithInfoRow, error) {
-	row := q.db.QueryRow(ctx, getProductWithInfo, arg.Pk, arg.Language)
+	row := q.db.QueryRow(ctx, getProductWithInfo, arg.ID, arg.Language)
 	var i GetProductWithInfoRow
 	err := row.Scan(
-		&i.Pk,
 		&i.Price,
 		&i.ID,
 		&i.ImageURLs,
@@ -72,7 +69,6 @@ func (q *Queries) GetProductWithInfo(ctx context.Context, arg GetProductWithInfo
 
 const listProductWithInfo = `-- name: ListProductWithInfo :many
 SELECT
-    products.pk,
     products.price,
     products.id,
     products."imageURLs",
@@ -92,23 +88,22 @@ LIMIT $2 offset $3
 `
 
 type ListProductWithInfoParams struct {
-	Language LanguageCode
-	Limit    int32
-	Offset   int32
+	Language LanguageCode `json:"language"`
+	Limit    int32        `json:"limit"`
+	Offset   int32        `json:"offset"`
 }
 
 type ListProductWithInfoRow struct {
-	Pk          int64
-	Price       int32
-	ID          pgtype.UUID
-	ImageURLs   []string
-	Status      ProductStatus
-	Quantity    int32
-	CreatedAt   pgtype.Timestamptz
-	UpdatedAt   pgtype.Timestamptz
-	Category    string
-	Name        string
-	Description string
+	Price       int32              `json:"price"`
+	ID          pgtype.UUID        `json:"id"`
+	ImageURLs   []string           `json:"imageURLs"`
+	Status      ProductStatus      `json:"status"`
+	Quantity    int32              `json:"quantity"`
+	CreatedAt   pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt   pgtype.Timestamptz `json:"updated_at"`
+	Category    string             `json:"category"`
+	Name        string             `json:"name"`
+	Description string             `json:"description"`
 }
 
 func (q *Queries) ListProductWithInfo(ctx context.Context, arg ListProductWithInfoParams) ([]ListProductWithInfoRow, error) {
@@ -121,7 +116,6 @@ func (q *Queries) ListProductWithInfo(ctx context.Context, arg ListProductWithIn
 	for rows.Next() {
 		var i ListProductWithInfoRow
 		if err := rows.Scan(
-			&i.Pk,
 			&i.Price,
 			&i.ID,
 			&i.ImageURLs,

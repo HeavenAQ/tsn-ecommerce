@@ -31,8 +31,8 @@ func (e *LanguageCode) Scan(src interface{}) error {
 }
 
 type NullLanguageCode struct {
-	LanguageCode LanguageCode
-	Valid        bool // Valid is true if LanguageCode is not NULL
+	LanguageCode LanguageCode `json:"language_code"`
+	Valid        bool         `json:"valid"` // Valid is true if LanguageCode is not NULL
 }
 
 // Scan implements the Scanner interface.
@@ -76,8 +76,8 @@ func (e *OrderStatus) Scan(src interface{}) error {
 }
 
 type NullOrderStatus struct {
-	OrderStatus OrderStatus
-	Valid       bool // Valid is true if OrderStatus is not NULL
+	OrderStatus OrderStatus `json:"order_status"`
+	Valid       bool        `json:"valid"` // Valid is true if OrderStatus is not NULL
 }
 
 // Scan implements the Scanner interface.
@@ -119,8 +119,8 @@ func (e *ProductStatus) Scan(src interface{}) error {
 }
 
 type NullProductStatus struct {
-	ProductStatus ProductStatus
-	Valid         bool // Valid is true if ProductStatus is not NULL
+	ProductStatus ProductStatus `json:"product_status"`
+	Valid         bool          `json:"valid"` // Valid is true if ProductStatus is not NULL
 }
 
 // Scan implements the Scanner interface.
@@ -142,64 +142,64 @@ func (ns NullProductStatus) Value() (driver.Value, error) {
 }
 
 type Order struct {
-	Pk              int64
-	ID              pgtype.UUID
-	UserPk          int64
-	Status          OrderStatus
-	IsPaid          bool
-	TotalPrice      int32
-	ShippingAddress string
-	ShippingDate    pgtype.Timestamptz
-	DeliveredDate   pgtype.Timestamptz
-	CreatedAt       pgtype.Timestamptz
-	UpdatedAt       pgtype.Timestamptz
+	Pk              int64              `json:"pk"`
+	ID              pgtype.UUID        `json:"id"`
+	UserPk          int64              `json:"user_pk"`
+	Status          OrderStatus        `json:"status"`
+	IsPaid          bool               `json:"is_paid"`
+	TotalPrice      int32              `json:"total_price"`
+	ShippingAddress string             `json:"shipping_address"`
+	ShippingDate    pgtype.Timestamptz `json:"shipping_date"`
+	DeliveredDate   pgtype.Timestamptz `json:"delivered_date"`
+	CreatedAt       pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt       pgtype.Timestamptz `json:"updated_at"`
 }
 
 type OrderDetail struct {
-	Pk        int64
-	OrderPk   int64
-	ProductPk int64
-	Quantity  int32
-	Price     int32
-	Discount  int32
-	CreatedAt pgtype.Timestamptz
-	UpdatedAt pgtype.Timestamptz
+	Pk        int64              `json:"pk"`
+	OrderPk   int64              `json:"order_pk"`
+	ProductPk int64              `json:"product_pk"`
+	Quantity  int32              `json:"quantity"`
+	Price     int32              `json:"price"`
+	Discount  int32              `json:"discount"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }
 
 type Product struct {
-	Pk        int64
-	ID        pgtype.UUID
-	Price     int32
-	Discount  int32
-	ImageURLs []string
-	Status    ProductStatus
-	Quantity  int32
-	CreatedAt pgtype.Timestamptz
-	UpdatedAt pgtype.Timestamptz
+	Pk        int64              `json:"pk"`
+	ID        pgtype.UUID        `json:"id"`
+	Price     int32              `json:"price"`
+	Discount  int32              `json:"discount"`
+	ImageURLs []string           `json:"imageURLs"`
+	Status    ProductStatus      `json:"status"`
+	Quantity  int32              `json:"quantity"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }
 
 type ProductTranslation struct {
-	Pk          int64
-	ProductPk   int64
-	Language    LanguageCode
-	Name        string
-	Description string
-	Category    string
-	CreatedAt   pgtype.Timestamptz
-	UpdatedAt   pgtype.Timestamptz
+	Pk          int64              `json:"pk"`
+	ProductPk   int64              `json:"product_pk"`
+	Language    LanguageCode       `json:"language"`
+	Name        string             `json:"name"`
+	Description string             `json:"description"`
+	Category    string             `json:"category"`
+	CreatedAt   pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt   pgtype.Timestamptz `json:"updated_at"`
 }
 
 type User struct {
-	Pk        int64
-	ID        pgtype.UUID
-	Email     string
-	Phone     string
-	Password  string
-	FirstName string
-	LastName  string
-	Language  LanguageCode
-	Address   string
-	LastLogin pgtype.Timestamptz
-	CreatedAt pgtype.Timestamptz
-	UpdatedAt pgtype.Timestamptz
+	Pk        int64              `json:"pk"`
+	ID        pgtype.UUID        `json:"id"`
+	Email     string             `json:"email"`
+	Phone     string             `json:"phone"`
+	Password  string             `json:"password"`
+	FirstName string             `json:"first_name"`
+	LastName  string             `json:"last_name"`
+	Language  LanguageCode       `json:"language"`
+	Address   string             `json:"address"`
+	LastLogin pgtype.Timestamptz `json:"last_login"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }

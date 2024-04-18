@@ -92,3 +92,7 @@ func (store *Store) AddProductTx(ctx context.Context, args AddProductTxParams) (
 	})
 	return &result, err
 }
+
+func (store *Store) Close() {
+	store.db.Close()
+}

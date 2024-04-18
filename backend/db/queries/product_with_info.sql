@@ -1,6 +1,5 @@
 -- name: GetProductWithInfo :one
 SELECT
-    products.pk,
     products.price,
     products.id,
     products."imageURLs",
@@ -15,12 +14,11 @@ FROM
     products
     INNER JOIN product_translations ON products.pk = product_translations.product_pk
 WHERE
-    products.pk = $1
+    products.id = $1
     AND product_translations.language = $2;
 
 -- name: ListProductWithInfo :many
 SELECT
-    products.pk,
     products.price,
     products.id,
     products."imageURLs",

@@ -18,11 +18,11 @@ RETURNING
 `
 
 type CreateProductTranslationParams struct {
-	ProductPk   int64
-	Language    LanguageCode
-	Name        string
-	Description string
-	Category    string
+	ProductPk   int64        `json:"product_pk"`
+	Language    LanguageCode `json:"language"`
+	Name        string       `json:"name"`
+	Description string       `json:"description"`
+	Category    string       `json:"category"`
 }
 
 func (q *Queries) CreateProductTranslation(ctx context.Context, arg CreateProductTranslationParams) (ProductTranslation, error) {
@@ -56,8 +56,8 @@ WHERE product_pk = $1
 `
 
 type DeleteProductTranslationParams struct {
-	ProductPk int64
-	Language  LanguageCode
+	ProductPk int64        `json:"product_pk"`
+	Language  LanguageCode `json:"language"`
 }
 
 func (q *Queries) DeleteProductTranslation(ctx context.Context, arg DeleteProductTranslationParams) error {
@@ -79,8 +79,8 @@ LIMIT 1
 `
 
 type GetProductTranslationParams struct {
-	ProductPk int64
-	Language  LanguageCode
+	ProductPk int64        `json:"product_pk"`
+	Language  LanguageCode `json:"language"`
 }
 
 func (q *Queries) GetProductTranslation(ctx context.Context, arg GetProductTranslationParams) (ProductTranslation, error) {
@@ -116,11 +116,11 @@ RETURNING
 `
 
 type UpdateProductTranslationParams struct {
-	ProductPk   int64
-	Language    LanguageCode
-	Name        string
-	Description string
-	Category    string
+	ProductPk   int64        `json:"product_pk"`
+	Language    LanguageCode `json:"language"`
+	Name        string       `json:"name"`
+	Description string       `json:"description"`
+	Category    string       `json:"category"`
 }
 
 func (q *Queries) UpdateProductTranslation(ctx context.Context, arg UpdateProductTranslationParams) (ProductTranslation, error) {

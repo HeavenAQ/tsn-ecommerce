@@ -17,10 +17,10 @@ RETURNING
 `
 
 type CreateProductParams struct {
-	Price     int32
-	ImageURLs []string
-	Status    ProductStatus
-	Quantity  int32
+	Price     int32         `json:"price"`
+	ImageURLs []string      `json:"imageURLs"`
+	Status    ProductStatus `json:"status"`
+	Quantity  int32         `json:"quantity"`
 }
 
 func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (Product, error) {
@@ -131,8 +131,8 @@ WHERE
 `
 
 type GetProductByPriceParams struct {
-	Price   int32
-	Price_2 int32
+	Price   int32 `json:"price"`
+	Price_2 int32 `json:"price_2"`
 }
 
 func (q *Queries) GetProductByPrice(ctx context.Context, arg GetProductByPriceParams) ([]Product, error) {
@@ -176,8 +176,8 @@ WHERE
 `
 
 type GetProductByQuantityParams struct {
-	Quantity   int32
-	Quantity_2 int32
+	Quantity   int32 `json:"quantity"`
+	Quantity_2 int32 `json:"quantity_2"`
 }
 
 func (q *Queries) GetProductByQuantity(ctx context.Context, arg GetProductByQuantityParams) ([]Product, error) {
@@ -219,8 +219,8 @@ LIMIT $1 offset $2
 `
 
 type ListProductsParams struct {
-	Limit  int32
-	Offset int32
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
 }
 
 func (q *Queries) ListProducts(ctx context.Context, arg ListProductsParams) ([]Product, error) {
@@ -268,11 +268,11 @@ RETURNING
 `
 
 type UpdateProductParams struct {
-	Pk        int64
-	Price     int32
-	ImageURLs []string
-	Status    ProductStatus
-	Quantity  int32
+	Pk        int64         `json:"pk"`
+	Price     int32         `json:"price"`
+	ImageURLs []string      `json:"imageURLs"`
+	Status    ProductStatus `json:"status"`
+	Quantity  int32         `json:"quantity"`
 }
 
 func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) (Product, error) {
@@ -310,9 +310,9 @@ RETURNING
 `
 
 type UpdateProductIdxImageURLParams struct {
-	Pk          int64
-	ImageURLs   []string
-	ImageURLs_2 []string
+	Pk          int64    `json:"pk"`
+	ImageURLs   []string `json:"imageURLs"`
+	ImageURLs_2 []string `json:"imageURLs_2"`
 }
 
 func (q *Queries) UpdateProductIdxImageURL(ctx context.Context, arg UpdateProductIdxImageURLParams) (Product, error) {

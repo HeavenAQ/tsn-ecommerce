@@ -12,7 +12,7 @@ func TestQueries_GetProductWithInfo(t *testing.T) {
 	// add a product
 	product := addRandomProductTx(t)
 	arg := GetProductWithInfoParams{
-		Pk:       product.Product.Pk,
+		ID:       product.Product.ID,
 		Language: product.ProductTrans.Language,
 	}
 
@@ -22,11 +22,12 @@ func TestQueries_GetProductWithInfo(t *testing.T) {
 	require.NotEmpty(t, product2)
 
 	// check if the product is the same
-	require.Equal(t, product.Product.Pk, product2.Pk)
+	require.Equal(t, product.Product.ID, product2.ID)
 	require.Equal(t, product.ProductTrans.Name, product2.Name)
 	require.Equal(t, product.ProductTrans.Description, product2.Description)
 	require.Equal(t, product.ProductTrans.CreatedAt, product2.CreatedAt)
 	require.Equal(t, product.ProductTrans.UpdatedAt, product2.UpdatedAt)
+	require.Equal(t, product.ProductTrans.Category, product2.Category)
 }
 
 func TestQueries_ListProductWithInfo(t *testing.T) {

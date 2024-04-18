@@ -17,10 +17,10 @@ RETURNING
 `
 
 type CreateOrderDetailParams struct {
-	OrderPk   int64
-	ProductPk int64
-	Quantity  int32
-	Price     int32
+	OrderPk   int64 `json:"order_pk"`
+	ProductPk int64 `json:"product_pk"`
+	Quantity  int32 `json:"quantity"`
+	Price     int32 `json:"price"`
 }
 
 func (q *Queries) CreateOrderDetail(ctx context.Context, arg CreateOrderDetailParams) (OrderDetail, error) {
@@ -133,12 +133,12 @@ RETURNING
 `
 
 type UpdateOrderDetailParams struct {
-	Pk        int64
-	OrderPk   int64
-	ProductPk int64
-	Quantity  int32
-	Price     int32
-	Discount  int32
+	Pk        int64 `json:"pk"`
+	OrderPk   int64 `json:"order_pk"`
+	ProductPk int64 `json:"product_pk"`
+	Quantity  int32 `json:"quantity"`
+	Price     int32 `json:"price"`
+	Discount  int32 `json:"discount"`
 }
 
 func (q *Queries) UpdateOrderDetail(ctx context.Context, arg UpdateOrderDetailParams) (OrderDetail, error) {
