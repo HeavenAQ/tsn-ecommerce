@@ -39,4 +39,18 @@ func TestQueries_ListProductWithInfo(t *testing.T) {
 		addProductTxWithLangCode(t, langCode)
 	}
 
+	// list products with info and check for errors
+	arg := ListProductWithInfoParams{
+		Language: langCode,
+		Limit:    int32(num),
+		Offset:   0,
+	}
+	products, err := testQueries.ListProductWithInfo(context.Background(), arg)
+
+	// check for errors or empty products
+	require.NoError(t, err)
+	for _, product := range products {
+		require.NotEmpty(t, product)
+	}
+
 }

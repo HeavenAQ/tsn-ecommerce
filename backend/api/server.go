@@ -4,6 +4,7 @@ import (
 	"net/http"
 	db "tsn-ecommerce/db/sqlc"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,15 +32,27 @@ func (server *Server) setupRouter() {
 		v1.GET("/healthcheck", server.healthCheck)
 		products := v1.Group("/products")
 		{
-			products.GET("/", server.ListProducts)
+			products.GET("", server.ListProducts)
 		}
 
 	}
 }
 
+func corsConfig() cors.Config {
+	corsConf := cors.DefaultConfig()
+	corsConf.AllowAllOrigins = true
+	corsConf.AllowMethods = []string{"GET", "POST", "DELETE", "OPTIONS", "PUT"}
+	corsConf.AllowHeaders = []string{"Authorization", "Content-Type", "Upgrade", "Origin",
+		"Connection", "Accept-Encoding", "Accept-Language", "Host", "Access-Control-Request-Method", "Access-Control-Request-Headers"}
+	return corsConf
+}
+
 func NewServer(store *db.Store) *Server {
 	server := &Server{store: store}
 	server.router = gin.Default()
+	server.router.Use(cors.Default())
+	server.router.Use(cors.New(corsConfig()))
+
 	server.setupRouter()
 	return server
 }

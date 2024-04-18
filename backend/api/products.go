@@ -10,7 +10,7 @@ import (
 type ListProductsRequest struct {
 	Language string `form:"language" binding:"required"`
 	Limit    int32  `form:"limit" binding:"required"`
-	Offset   int32  `form:"offset" binding:"required"`
+	Offset   int32  `form:"offset"`
 }
 
 func (server *Server) ListProducts(ctx *gin.Context) {

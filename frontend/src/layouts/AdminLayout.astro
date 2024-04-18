@@ -27,7 +27,7 @@ const queryClient = new QueryClient({
   <body class="grid grid-cols-[16rem_1fr] h-[100vh] grid-rows-[auto_1fr]">
     <SideBar />
     <Header />
-    <main class="bg-zinc-100 px-10 py-14">
+    <main class="bg-zinc-100 px-10 py-14 overflow-x-scroll">
       <slot />
     </main>
     <style is:global>
@@ -54,6 +54,10 @@ const queryClient = new QueryClient({
 
         li {
           @apply list-none;
+        }
+
+        th {
+          @apply font-bold text-lg;
         }
       }
     </style>
