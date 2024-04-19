@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createProduct = `-- name: CreateProduct :one
@@ -52,6 +54,16 @@ WHERE pk = $1
 
 func (q *Queries) DeleteProduct(ctx context.Context, pk int64) error {
 	_, err := q.db.Exec(ctx, deleteProduct, pk)
+	return err
+}
+
+const deleteProductById = `-- name: DeleteProductById :exec
+DELETE FROM products
+WHERE id = $1
+`
+
+func (q *Queries) DeleteProductById(ctx context.Context, id pgtype.UUID) error {
+	_, err := q.db.Exec(ctx, deleteProductById, id)
 	return err
 }
 

@@ -46,6 +46,10 @@ RETURNING
 DELETE FROM products
 WHERE pk = $1;
 
+-- name: DeleteProductById :exec
+DELETE FROM products
+WHERE id = $1;
+
 -- name: GetProdcutByStatus :many
 SELECT
     *

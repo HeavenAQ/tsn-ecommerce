@@ -17,6 +17,14 @@ WHERE
     $2
 LIMIT 1;
 
+-- name: GetProductTranslations :many
+SELECT
+    *
+FROM
+    product_translations
+WHERE
+    product_pk = $1;
+
 -- name: UpdateProductTranslation :one
 UPDATE
     product_translations

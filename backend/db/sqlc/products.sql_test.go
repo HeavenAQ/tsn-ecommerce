@@ -115,6 +115,7 @@ func TestQueries_UpdateProduct(t *testing.T) {
 	// clean up
 	testQueries.DeleteProduct(context.Background(), product1.Pk)
 }
+
 func TestQueries_DeleteProduct(t *testing.T) {
 	product := createRandomProduct(t)
 
@@ -125,4 +126,22 @@ func TestQueries_DeleteProduct(t *testing.T) {
 	// check if the product is deleted
 	_, err = testQueries.GetProduct(context.Background(), product.Pk)
 	require.Error(t, err)
+}
+
+func TestQueries_DeleteProductAndInfo(t *testing.T) {
+	// create a random product with info
+	product := addRandomProductTx(t)
+	err := testQueries.DeleteProductById(context.Background(), product.Product.ID)
+	require.NoError(t, err)
+
+	// ensure product is deleted
+	product2, err := testQueries.GetProduct(context.Background(), product.Product.Pk)
+	require.Error(t, err)
+	require.Empty(t, product2)
+
+	// ensure product info is deleted
+	var nilProductInfo []ProductTranslation
+	product2Info, err := testQueries.GetProductTranslations(context.Background(), product.Product.Pk)
+	require.NoError(t, err)
+	require.Equal(t, product2Info, nilProductInfo)
 }

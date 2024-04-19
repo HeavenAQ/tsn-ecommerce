@@ -26,18 +26,6 @@ func (server *Server) healthCheck(ctx *gin.Context) {
 	}
 }
 
-func (server *Server) setupRouter() {
-	v1 := server.router.Group("/api/v1")
-	{
-		v1.GET("/healthcheck", server.healthCheck)
-		products := v1.Group("/products")
-		{
-			products.GET("", server.ListProducts)
-		}
-
-	}
-}
-
 func corsConfig() cors.Config {
 	corsConf := cors.DefaultConfig()
 	corsConf.AllowAllOrigins = true

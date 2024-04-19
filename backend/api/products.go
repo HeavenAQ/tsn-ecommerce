@@ -5,6 +5,7 @@ import (
 	db "tsn-ecommerce/db/sqlc"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type ListProductsRequest struct {
@@ -34,4 +35,28 @@ func (server *Server) ListProducts(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, products)
+}
+
+type DeleteProductRequest struct {
+	ID string `uri:"id" binding:"required,uuid"`
+}
+
+func (server *Server) DeleteProduct(ctx *gin.Context) {
+	var req DeleteProductRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// convert string to uuid
+	var pgUUID pgtype.UUID
+	pgUUID.Scan(req.ID)
+
+	// delete product from database
+	err := server.store.DeleteProductById(ctx, pgUUID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "product deleted"})
 }

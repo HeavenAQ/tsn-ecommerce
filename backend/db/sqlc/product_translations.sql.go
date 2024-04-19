@@ -99,6 +99,44 @@ func (q *Queries) GetProductTranslation(ctx context.Context, arg GetProductTrans
 	return i, err
 }
 
+const getProductTranslations = `-- name: GetProductTranslations :many
+SELECT
+    pk, product_pk, language, name, description, category, created_at, updated_at
+FROM
+    product_translations
+WHERE
+    product_pk = $1
+`
+
+func (q *Queries) GetProductTranslations(ctx context.Context, productPk int64) ([]ProductTranslation, error) {
+	rows, err := q.db.Query(ctx, getProductTranslations, productPk)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ProductTranslation
+	for rows.Next() {
+		var i ProductTranslation
+		if err := rows.Scan(
+			&i.Pk,
+			&i.ProductPk,
+			&i.Language,
+			&i.Name,
+			&i.Description,
+			&i.Category,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateProductTranslation = `-- name: UpdateProductTranslation :one
 UPDATE
     product_translations

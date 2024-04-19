@@ -59,6 +59,18 @@ const queryClient = new QueryClient({
         th {
           @apply font-bold text-lg;
         }
+
+        table {
+          @apply rounded-2xl border-collapse border-spacing-3;
+        }
+
+        td:first-child,
+        th:first-child {
+          @apply border-l-[none];
+        }
+        td {
+          @apply p-2;
+        }
       }
     </style>
   </body>
