@@ -4,13 +4,32 @@ import { Language } from '../../../types/global.ts'
 import { getProducts, deleteProduct, type Product } from '../../api/products.ts'
 import Spinner from './Spinner.tsx'
 import { RxCrossCircled } from 'react-icons/rx'
+import toast, { Toaster } from 'react-hot-toast'
+import Button, { ButtonType } from './Button.tsx'
+import { useState } from 'react'
+import ProductForm from '../react/ProductForm.tsx'
 
-export default function ProductTable() {
+const ProductTableHeader = () => {
+  const [formOpen, setFormOpen] = useState(false)
+  return (
+    <div className="inline-flex justify-center items-center mb-10 w-[1300px]">
+      <h1 className="mr-auto">Products</h1>
+      <Button
+        type={ButtonType.Primary}
+        content="新增"
+        onClick={() => setFormOpen(true)}
+      />
+      <ProductForm title="新增商品" isOpen={formOpen} setIsOpen={setFormOpen} />
+    </div>
+  )
+}
+
+const ProductTable = () => {
   const { data: products, isLoading, error } = useProductQuery(Language.JP)
 
   // if error, show something went wrong
   if (error) {
-    return <div>エラーが発生しました</div>
+    toast.error('發生錯誤請聯絡管理員')
   }
 
   // if loading, show spinner
@@ -23,8 +42,29 @@ export default function ProductTable() {
   }
 
   return (
-    <div className="mx-auto rounded-2xl shadow-md w-[1300px]">
-      <table className="overflow-hidden w-full text-left bg-white">
+    <div className="mx-auto rounded-2xl w-[1300px]">
+      <Toaster
+        position="top-right"
+        gutter={12}
+        containerStyle={{ margin: '8px' }}
+        toastOptions={{
+          success: {
+            duration: 3000
+          },
+          error: {
+            duration: 5000
+          },
+          style: {
+            fontSize: '16px',
+            maxWidth: '500px',
+            padding: '16px 24px',
+            backgroundColor: '#333',
+            color: '#fff'
+          }
+        }}
+      />
+      <ProductTableHeader />
+      <table className="overflow-hidden w-full text-left bg-white shadow-md">
         <thead className="h-14 bg-zinc-100">
           <tr>
             <th className="w-20"></th>
@@ -57,10 +97,15 @@ const ProductRow: React.FC<Prop> = ({ product }) => {
   const { isPending, mutate } = useMutation(
     {
       mutationFn: deleteProduct,
-      onSuccess: () =>
+      onSuccess: () => {
+        toast.success('商品已成功刪除')
         client.invalidateQueries({
           queryKey: ['products', Language.JP]
         })
+      },
+      onError: err => {
+        toast.error(err.message)
+      }
     },
     client
   )
@@ -78,7 +123,10 @@ const ProductRow: React.FC<Prop> = ({ product }) => {
 
   // return product rows
   return (
-    <tr className="mb-4 h-20 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-zinc-200">
+    <tr
+      className="mb-4 h-20 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-zinc-200"
+      onClick={() => console.log(product.id)}
+    >
       <td
         className="z-10 rounded-tl-2xl rounded-bl-2xl duration-200 ease-in-out hover:bg-red-300 group/delete"
         onClick={() => mutate(product.id)}
@@ -108,3 +156,5 @@ const useProductQuery = (language: Language) => {
     client
   )
 }
+
+export default ProductTable

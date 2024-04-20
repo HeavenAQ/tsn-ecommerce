@@ -2,15 +2,6 @@
 import Header from '../components/react/Header.tsx'
 import SideBar from '../components/SideBar.astro'
 import { ViewTransitions } from 'astro:transitions'
-import { QueryClient } from '@tanstack/react-query'
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60
-    }
-  }
-})
 ---
 
 <!doctype html>
@@ -27,7 +18,7 @@ const queryClient = new QueryClient({
   <body class="grid grid-cols-[16rem_1fr] h-[100vh] grid-rows-[auto_1fr]">
     <SideBar />
     <Header />
-    <main class="bg-zinc-100 px-10 py-14 overflow-x-scroll">
+    <main class="bg-zinc-100 px-10 py-14 overflow-x-scroll w-full relative">
       <slot />
     </main>
     <style is:global>
